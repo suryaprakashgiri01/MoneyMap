@@ -17,6 +17,8 @@ prefilled for MoneyMap. Keep bodies short — reviewers read the first 10 lines.
 - **Never pass `--body` inline in PowerShell** — backticks are PowerShell escapes and mangle
   markdown. Always `--body-file <temp.md>` (write file → use → delete).
 - One PR = one subject. Unrelated cleanup is a separate tiny PR.
+- Delete every merged branch immediately (remote + local) and never reuse its name — see
+  **Merging** below.
 - Never merge a PR whose checks are failing or whose gate was not actually executed.
 - Update `PROGRESS.local.md` (git-ignored) **only after** the merge commit exists.
 
@@ -98,6 +100,19 @@ gh pr checks <number>
 - Merge through the PR only (`gh pr merge <n> --squash` or `--merge`), never `git push origin main`.
 - Default merge style: **squash** for `fix/`, `docs/`, `chore/`; **merge commit** (`--merge`) for
   `stage/NN-*` so the stage boundary stays visible in history.
+- **Delete the branch immediately after merge**, remote then local:
+
+```powershell
+gh pr merge <n> --merge          # or --squash
+git switch main; git pull --ff-only
+git push origin --delete <branch>
+git branch -d <branch>           # -D only if the branch was rebased/squashed upstream
+```
+
+- **Never reuse a merged branch name.** Post-merge work starts from `main` on a fresh branch and gets
+  its own PR. A commit pushed to an already-merged branch never lands on `main`.
+- Do not keep merged branches "just in case" and do not tag stage branches; the merge commit, the PR
+  and the stage report are the record. Tags are for releases (`vX.Y.Z`).
 - After merge: confirm `main` is green, then update `PROGRESS.local.md`.
 
 ## Repo-specific notes

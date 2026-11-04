@@ -28,6 +28,13 @@ Rules:
   Every change reaches `main` through a pull request — including documentation and chore commits.
 - Force-push allowed only on your own unreleased feature branch (`--force-with-lease`), never `main`.
 - PR flow, template and gate: see the project skill `.opencode/skills/raise-pr/SKILL.md`.
+- **Delete a merged branch immediately** — remote and local
+  (`git push origin --delete <branch>` then `git branch -d <branch>`). The merge commit and the PR
+  are the permanent record; the branch itself is disposable.
+- **Never reuse a merged branch name.** A post-merge fix starts from `main` on a fresh
+  `fix/…` or `docs/…` branch so it gets its own PR and a clean diff. This prevents work committed to
+  an already-merged branch from silently never reaching `main`.
+- Do not tag stage branches. Tags are reserved for releases (`vX.Y.Z`, §7).
 - Rebase before merge to keep history linear on `main` (squash for noisy WIP, merge commit for stages).
 
 ## 3. Commit messages (Conventional Commits)
@@ -61,13 +68,20 @@ fix(auth): revoke token family on refresh reuse
 ## 5. Per-stage sequence
 
 ```
-git switch main && git pull
+git switch main && git pull --ff-only
 git switch -c stage/NN-name
 # work in small commits
-# run: ruff, mypy, pytest, (eval if AI-related)
+# run the stage gate: ruff, mypy, pytest, (eval if AI-related)
 # stage report written
-git switch main && git merge --no-ff stage/NN-name
+git push -u origin HEAD
+gh pr create --base main --body-file <temp.md>      # see .opencode/skills/raise-pr/SKILL.md
+# after approval: merge through the PR (--merge for stage/NN-*, --squash for fix/docs/chore)
+#   gh pr merge <n> --merge
+# then delete the branch, remote and local (§2)
 ```
+
+`main` is never merged into locally with `git merge`; the merge happens on the PR so protection,
+history and the audit trail stay in one place.
 
 ## 6. Progress ledger
 
