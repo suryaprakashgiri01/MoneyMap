@@ -1,0 +1,57 @@
+# --- Local progress tracking (machine-local, never shared) ---
+PROGRESS.local.md
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+!.gitkeep
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+dist/
+build/
+.uv/
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# --- Tooling artifacts ---
+graphify-out/
+graphify.cache/
+.rtk/
+
+# --- Logs / OS ---
+*.log
+logs/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# --- Data dumps (must never be committed) ---
+*.sqlite3
+*.db
+dump/
+backups/
