@@ -24,8 +24,10 @@ Verify before the first commit in any clone. If wrong, fix repo config first, th
 | `chore/short-slug` | tooling, CI, dependency bumps |
 
 Rules:
-- No direct commits to `main` after the initial bootstrap.
+- `main` is **protected**: PR-only, no direct pushes, no force-push, no deletion.
+  Every change reaches `main` through a pull request — including documentation and chore commits.
 - Force-push allowed only on your own unreleased feature branch (`--force-with-lease`), never `main`.
+- PR flow, template and gate: see the project skill `.opencode/skills/raise-pr/SKILL.md`.
 - Rebase before merge to keep history linear on `main` (squash for noisy WIP, merge commit for stages).
 
 ## 3. Commit messages (Conventional Commits)
